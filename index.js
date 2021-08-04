@@ -4,7 +4,7 @@ inquirer
         type: "list",
         name: "Choose an option",
         message: "Choose one of the following.",
-        choices:["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role",]
+        choices:["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role", "Exit"]
       },
       {
         type: "input",
