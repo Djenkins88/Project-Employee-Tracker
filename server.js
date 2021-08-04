@@ -27,8 +27,35 @@ connection.connect(function(err){
 });
 
 function start(){
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "Start",
+            message: "Choose one of the following.",
+            choices: ["View", "Add", "Update", "Exit"]
+        }
+    ]).then (function(res){
+        switch(res.start){
+            case "View":
+                view();
+                break;
+            case "Add":
+                add();
+                break;
+            case "Update":
+                updateEmployee();
+            break;
+            case "Exit":
+                console.log("--------------------------------");
+                console.log("All done");
+               // console.log"---------------------------------");
+                break;
+            default:
+                console.log("default");
+        }
+    });
 
-}
 
 function view(){
 
