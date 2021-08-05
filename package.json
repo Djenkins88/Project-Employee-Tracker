@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Djenkins88/Project-Employee-Tracker#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "inquirer": "^8.1.2"
   }
 }

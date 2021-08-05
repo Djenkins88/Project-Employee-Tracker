@@ -31,7 +31,7 @@ function start(){
     .prompt([
         {
             type: "list",
-            name: "Start",
+            name: "start",
             message: "Choose one of the following.",
             choices: ["View", "Add", "Update", "Exit"]
         }
@@ -62,7 +62,7 @@ function view(){
     .prompt([
         {
             type: "list",
-            name: "View",
+            name: "view",
             message: "Choose one of the following.",
             choices: ["All employees", "By department", "By role",]
         }
@@ -83,7 +83,7 @@ function view(){
 }
 
 function viewAllEmployees(){
-    connection.query("SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id department_id = d.id", function(err, results) {
+    connection.query("SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e. role_id = r.title LEFT JOIN department d ON r.department_id = d.id", function(err, results){
         if(err) throw err;
         console.table(results);
         start();
@@ -145,7 +145,7 @@ function viewByRole(){
         ]).then(function(answer){
             console.log(answer.choice);
             connection.query(
-                "SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e. role_id = r.title LEFT JOIN department d ON r.department_id = d.id WHERE e.role_id =?", [answer.choice], function(err, results)
+                "SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e.role_id = r.title LEFT JOIN department d ON r.department_id = d.id WHERE e.role_id =?", [answer.choice], function(err, results)
                 {
                     if(err) throw err;
                     console.table(results);
@@ -204,7 +204,7 @@ function addDepartment(){
                 start();
             }
         )
-    });
+    })
 }
 
 function addEmployeeRole(){
@@ -225,12 +225,11 @@ function addEmployeeRole(){
                 }
                 return false;
             }
-            
         },
         {
             name: "department_id",
             type: "number",
-            message: "Enter department_id",
+            message: "Enter department id",
             validate: function(value){
                 if(isNaN(value) === false){
                     return true;
@@ -266,7 +265,7 @@ function addEmployeeRole(){
             {
                 name: "firstName",
                 type: "input",
-                message: "Enter employee name"
+                message: "Enter employee first name"
             },
             {
                 name: "lastName",
@@ -277,7 +276,7 @@ function addEmployeeRole(){
                 name: "role",
                 type: "rawlist",
                 choices: function(){
-                    let choiceArr = [];
+                    var choiceArr = [];
                     for(i=0; i< results.length; i++){
                         choiceArr.push(results[i].title);
                     }
@@ -378,7 +377,7 @@ function updateEmployee(){
                     [{
                             role_id: answer.role,
                             manager_id: answer.manager
-                        }, savedName
+                        }, saveName
                     ],
                 ),
                 console.log("--------------------------------");
