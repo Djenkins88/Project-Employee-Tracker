@@ -83,7 +83,8 @@ function view(){
 }
 
 function viewAllEmployees(){
-    connection.query("SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e. role_id = r.title LEFT JOIN department d ON r.department_id = d.id", function(err, results){
+    connection.query("SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e.role_id = r.title LEFT JOIN department d ON r. department_id = d.id", function(err, results)
+    {
         if(err) throw err;
         console.table(results);
         start();
@@ -99,7 +100,7 @@ function viewByDepartment(){
         .prompt([
             {
                 name: "choice",
-                type: "rawlist",
+                type: "list",
                 choices: function(){
                     let choiceArr = [];
                     for(i=0; i< results.length; i++){
@@ -111,7 +112,7 @@ function viewByDepartment(){
             }
         ]).then(function(answer){
             connection.query(
-                "SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e. role_id = r.title LEFT JOIN department d ON r.department_id = d.id WHERE d.name =?", [answer.choice], function(err, results)
+                "SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e.role_id = r.title LEFT JOIN department d ON r.department_id = d.id WHERE d.name =?", [answer.choice], function(err, results)
                 {
                     if(err) throw err;
                     console.table(results);
@@ -125,14 +126,14 @@ function viewByDepartment(){
 
 function viewByRole(){
       //database for all departments
-      connection.query("SELECT * title FROM role", function(err, results){
+        connection.query("SELECT title FROM role", function(err, results){
         if(err) throw err;
         //once you have the roles, prompt user for which they choose
         inquirer
         .prompt([
             {
                 name: "choice",
-                type: "rawlist",
+                type: "list",
                 choices: function(){
                     let choiceArr = [];
                     for(i=0; i< results.length; i++){
@@ -145,7 +146,7 @@ function viewByRole(){
         ]).then(function(answer){
             console.log(answer.choice);
             connection.query(
-                "SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e.role_id = r.title LEFT JOIN department d ON r.department_id = d.id WHERE e.role_id =?", [answer.choice], function(err, results)
+                "SELECT e.id AS ID, e.first_name AS First, e.last_name AS Last, e.role_id AS Role, r.salary AS Salary, m.last_name AS Manager, d.name AS Department FROM employee e LEFT JOIN employee m ON e.manager_id = m.id LEFT JOIN role r ON e. role_id = r.title LEFT JOIN department d ON r.department_id = d.id WHERE e.role_id =?", [answer.choice], function(err, results)
                 {
                     if(err) throw err;
                     console.table(results);
@@ -190,16 +191,16 @@ function addDepartment(){
         {
             name:"department",
             type: "input",
-            message: "What would you like the department to be?"
+            message: "What would you like the department name to be?"
         }   
     ]).then(function(answer){
         connection.query(
-            "INSERT INTO department VALUES (DEFALUT, ?",
+        "INSERT INTO department VALUES (DEFAULT, ?)",
             [answer.department],
             function(err){
                 if(err) throw err;
                 console.log("--------------------------------");
-                console.log("Department updated with "+ answer.department);
+                console.log("Departments updated with "+ answer.department);
                 console.log("--------------------------------");
                 start();
             }
@@ -256,7 +257,7 @@ function addEmployeeRole(){
     })
 }
 
-function addEmployeeRole(){
+function addEmployee(){
     connection.query("Select * From role", function(err, results){
         if(err) throw err;
         //Once you have results prompt user to new employee information
@@ -274,7 +275,7 @@ function addEmployeeRole(){
             },
             {
                 name: "role",
-                type: "rawlist",
+                type: "list",
                 choices: function(){
                     var choiceArr = [];
                     for(i=0; i< results.length; i++){
@@ -325,7 +326,7 @@ function updateEmployee(){
         .prompt([
             {
                 name: "choice",
-                type: "rawlist",
+                type: "list",
                 choices: function(){
                     let choiceArr = [];
                     for(i=0; i< results.length; i++)
@@ -348,7 +349,7 @@ function updateEmployee(){
             .prompt([
                 {
                     name: "role",
-                    type: "rawlist",
+                    type: "list",
                     choices: function(){
                         let choiceArr = [];
                         for(i=0; i< results.length; i++){
@@ -367,7 +368,7 @@ function updateEmployee(){
                         }
                         return false;
                     },
-                    message: "Enter manager ID",
+                    message: "Enter new manager ID",
                     default: "1"
                 }
             ]).then(function(answer){
